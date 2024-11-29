@@ -1,3 +1,22 @@
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.data.redis: DEBUG
+  file:
+    name: ./logs/api-gateway.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
 spring:
   application.name: gate-keeper
   cloud:
@@ -26,8 +45,3 @@ spring:
     redis:
       host: localhost
       port: 6379
-
-logging:
-  level:
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.data.redis: DEBUG
