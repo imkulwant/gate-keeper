@@ -11,30 +11,32 @@ import reactor.core.publisher.Mono;
 @Component
 public class LoggingFilter implements GlobalFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 
-    private static final String REQUEST_LOG_TEMPLATE = """
-            -------------Request-------------
-            Request Method: [{}]
-            Request URI: [{}]
-            Request Body: [{}]
-            ---------------------------------
-            """;
-    private static final String RESPONSE_LOG_TEMPLATE = """
-            -------------Response-------------
-            Response Status: [{}]
-            Response Body: [{}]
-            ---------------------------------
-            """;
+	private static final String REQUEST_LOG_TEMPLATE = """
+			-------------Request-------------
+			Request Method: [{}]
+			Request URI: [{}]
+			Request Body: [{}]
+			---------------------------------
+			""";
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+	private static final String RESPONSE_LOG_TEMPLATE = """
+			-------------Response-------------
+			Response Status: [{}]
+			Response Body: [{}]
+			---------------------------------
+			""";
 
-        log.info(REQUEST_LOG_TEMPLATE, exchange.getRequest().getMethod(), exchange.getRequest().getURI(), exchange.getRequest().getBody());
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-        return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-            log.info(RESPONSE_LOG_TEMPLATE, exchange.getResponse().getStatusCode(), exchange.getResponse());
-        }));
-    }
+		log.info(REQUEST_LOG_TEMPLATE, exchange.getRequest().getMethod(), exchange.getRequest().getURI(),
+				exchange.getRequest().getBody());
+
+		return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+			log.info(RESPONSE_LOG_TEMPLATE, exchange.getResponse().getStatusCode(), exchange.getResponse());
+		}));
+	}
 
 }
