@@ -17,6 +17,15 @@ management:
     health:
       show-details: always
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      defaultCircuitBreaker:
+        sliding-window-size: 5 # No of recent calls are tracked to check for failures
+        minimum-number-of-calls: 3 # least number of calls needed before the circuit breaker starts checking for failures
+        failure-rate-threshold: 50 # percentage of failed calls that will cause the circuit breaker to open
+        wait-duration-in-open-state: 10000 # Duration in milliseconds for how long the circuit breaker stays open before trying to allow calls again
+
 spring:
   application.name: gate-keeper
   cloud:
@@ -30,6 +39,10 @@ spring:
             - Path=/service1/**
           filters:
             - RewritePath=/service1(?<remaining>/?.*), $\{remaining}
+            - name: CircuitBreaker
+              args:
+                name: defaultCircuitBreaker
+                fallbackUri: forward:/fallback
         - id: service2
           uri: http://localhost:8082
           predicates:

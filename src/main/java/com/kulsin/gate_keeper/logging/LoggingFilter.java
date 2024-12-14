@@ -11,32 +11,32 @@ import reactor.core.publisher.Mono;
 @Component
 public class LoggingFilter implements GlobalFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 
-	private static final String REQUEST_LOG_TEMPLATE = """
-			-------------Request-------------
-			Request Method: [{}]
-			Request URI: [{}]
-			Request Body: [{}]
-			---------------------------------
-			""";
+    private static final String REQUEST_LOG_TEMPLATE = """
+            === Incoming Request ===
+            Method: {}
+            URI: {}
+            Headers: {}
+            Body: {}
+            ========================""";
 
-	private static final String RESPONSE_LOG_TEMPLATE = """
-			-------------Response-------------
-			Response Status: [{}]
-			Response Body: [{}]
-			---------------------------------
-			""";
+    private static final String RESPONSE_LOG_TEMPLATE = """
+            === Outgoing Response ===
+            Status: {}
+            Headers: {}
+            Body: {}
+            ========================""";
 
-	@Override
-	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-		log.info(REQUEST_LOG_TEMPLATE, exchange.getRequest().getMethod(), exchange.getRequest().getURI(),
-				exchange.getRequest().getBody());
+        log.info(REQUEST_LOG_TEMPLATE, exchange.getRequest().getMethod(), exchange.getRequest().getURI(), exchange.getRequest().getHeaders(),
+                exchange.getRequest().getBody());
 
-		return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-			log.info(RESPONSE_LOG_TEMPLATE, exchange.getResponse().getStatusCode(), exchange.getResponse());
-		}));
-	}
+        return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+            log.info(RESPONSE_LOG_TEMPLATE, exchange.getResponse().getStatusCode(), exchange.getResponse().getHeaders(), exchange.getResponse());
+        }));
+    }
 
 }

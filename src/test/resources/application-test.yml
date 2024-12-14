@@ -1,0 +1,12 @@
+resilience4j:
+  circuitbreaker:
+    instances:
+      defaultCircuitBreaker:
+        sliding-window-size: 5 # No of recent calls are tracked to check for failures
+        minimum-number-of-calls: 3 # least number of calls needed before the circuit breaker starts checking for failures
+        failure-rate-threshold: 50.0 # percentage of failed calls that will cause the circuit breaker to open
+        wait-duration-in-open-state: 10000 # Duration in milliseconds for how long the circuit breaker stays open before trying to allow calls again
+
+logging:
+  level:
+    io.github.resilience4j.circuitbreaker: DEBUG
