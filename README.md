@@ -23,5 +23,23 @@ redis-cli
 
 Application Status & Metrics:
 ```bash
-curl --location 'http://localhost:8080/actuator/health'
+curl --location 'http://localhost:8080/actuator/health' | jq      
+```
+
+```bash
+curl 'http://localhost:8080/actuator/health/liveness' | jq
+```
+
+```bash
+curl 'http://localhost:8080/actuator/health/readiness' | jq
+```
+
+Install Redis
+```bash
+brew install redis
+```
+
+Start Redis
+```bash
+brew services start redis
 ```
