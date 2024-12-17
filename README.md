@@ -23,7 +23,7 @@ redis-cli
 
 Application Status & Metrics:
 ```bash
-curl --location 'http://localhost:8080/actuator/health' | jq      
+curl --location 'http://localhost:8080/actuator/health' | jq
 ```
 
 ```bash

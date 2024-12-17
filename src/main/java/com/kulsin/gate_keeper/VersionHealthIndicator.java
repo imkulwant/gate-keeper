@@ -1,5 +1,6 @@
-package com.kulsin.gate_keeper.config;
+package com.kulsin.gate_keeper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -9,11 +10,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class VersionHealthIndicator implements HealthIndicator {
 
-	private final BuildProperties buildProperties;
-
-	public VersionHealthIndicator(BuildProperties buildProperties) {
-		this.buildProperties = buildProperties;
-	}
+	@Autowired
+	private BuildProperties buildProperties;
 
 	@Override
 	public Health health() {

@@ -15,6 +15,8 @@ management:
         include: health,info,metrics,liveness,readiness
   endpoint:
     health:
+      probes:
+        enabled: true
       show-details: always
   health:
     livenessState.enabled: true
