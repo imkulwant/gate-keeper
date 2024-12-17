@@ -18,16 +18,33 @@ public class CircuitBreakerLogger {
 	@PostConstruct
 	public void setupCircuitBreakerLogging() {
 		log.info("Setting up circuit breaker logging");
-		circuitBreakerRegistry.getAllCircuitBreakers()
-			.stream()
-			.filter(p -> p.getName().equals("defaultCircuitBreaker"))
-			.forEach(circuitBreaker -> circuitBreaker.getEventPublisher()
-				.onStateTransition(event -> log.info("Circuit Breaker State Transition: {}", event))
-				.onError(event -> log.error("Circuit Breaker Error: {}", event))
-				.onSuccess(event -> log.info("Circuit Breaker Success: {}", event))
-				.onIgnoredError(event -> log.warn("Circuit Breaker Ignored Error: {}", event))
-				.onReset(event -> log.info("Circuit Breaker Reset: {}", event))
-				.onCallNotPermitted(event -> log.warn("Circuit Breaker Call Not Permitted: {}", event)));
+		circuitBreakerRegistry.getAllCircuitBreakers().forEach(circuitBreaker -> {
+			circuitBreaker.getEventPublisher()
+				.onStateTransition(event -> logEvent("Circuit Breaker State Transition.", event.getCircuitBreakerName(),
+						event.getEventType().toString(), "INFO"))
+				.onError(event -> logEvent("Circuit Breaker Error.", event.getCircuitBreakerName(),
+						event.getEventType().toString(), "ERROR"))
+				.onSuccess(event -> logEvent("Circuit Breaker Success.", event.getCircuitBreakerName(),
+						event.getEventType().toString(), "INFO"))
+				.onIgnoredError(event -> logEvent("Circuit Breaker Ignored Error.", event.getCircuitBreakerName(),
+						event.getEventType().toString(), "WARN"))
+				.onReset(event -> logEvent("Circuit Breaker Reset.", event.getCircuitBreakerName(),
+						event.getEventType().toString(), "INFO"))
+				.onCallNotPermitted(event -> logEvent("Circuit Breaker Call Not Permitted.",
+						event.getCircuitBreakerName(), event.getEventType().toString(), "WARN"));
+		});
+	}
+
+	private static void logEvent(String message, String circuitBreakerName, String eventType, String logLevel) {
+		if ("ERROR".equals(logLevel)) {
+			log.error("{} circuitBreakerName: {}, eventType: {}", message, circuitBreakerName, eventType);
+		}
+		else if ("WARN".equals(logLevel)) {
+			log.warn("{} circuitBreakerName: {}, eventType: {}", message, circuitBreakerName, eventType);
+		}
+		else {
+			log.info("{} circuitBreakerName: {}, eventType: {}", message, circuitBreakerName, eventType);
+		}
 	}
 
 }

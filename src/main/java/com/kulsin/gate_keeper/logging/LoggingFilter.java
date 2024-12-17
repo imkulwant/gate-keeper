@@ -14,16 +14,20 @@ public class LoggingFilter implements GlobalFilter {
 	private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 
 	private static final String LOG_TEMPLATE = """
-			\n------------------------------------------------
+			\n--------------------------------------------------------
+			Request Details
+			--------------------------------------------------------
 			Request Method: {}
 			Request URI: {}
 			Request Headers: {}
 			Request Body: {}
-			------------------------------------------------
+			--------------------------------------------------------
+			Response Details
+			--------------------------------------------------------
 			Response Status: {}
 			Response Headers: {}
 			Response Body: {}
-			------------------------------------------------
+			--------------------------------------------------------
 			""";
 
 	@Override
