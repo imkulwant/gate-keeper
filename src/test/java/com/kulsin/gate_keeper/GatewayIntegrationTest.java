@@ -54,7 +54,11 @@ public class GatewayIntegrationTest {
 		WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/api/ping"))
 			.willReturn(WireMock.ok("Pong").withFixedDelay(10000)));
 
-		webTestClient.get().uri("/service1/api/ping").exchange().expectStatus().isEqualTo(HttpStatus.GATEWAY_TIMEOUT);
+		webTestClient.get()
+			.uri("/service1/api/ping")
+			.exchange()
+			.expectStatus()
+			.isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
 	}
 
 	@Test
