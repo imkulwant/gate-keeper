@@ -1,0 +1,60 @@
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    org.springframework.data.redis: INFO
+  file:
+    name: ./logs/api-gateway.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      defaultCircuitBreaker:
+        sliding-window-size: 5 # No of recent calls are tracked to check for failures
+        minimum-number-of-calls: 3 # least number of calls needed before the circuit breaker starts checking for failures
+        failure-rate-threshold: 50 # percentage of failed calls that will cause the circuit breaker to open
+        wait-duration-in-open-state: 10000 # Duration in milliseconds for how long the circuit breaker stays open before trying to allow calls again
+
+spring:
+  application.name: gate-keeper
+  cloud:
+    config:
+      enabled: false
+    gateway:
+      routes:
+        - id: service1
+          uri: http://localhost:8081
+          predicates:
+            - Path=/service1/**
+          filters:
+            - RewritePath=/service1(?<remaining>/?.*), $\{remaining}
+            - name: CircuitBreaker
+              args:
+                name: defaultCircuitBreaker
+                fallbackUri: forward:/fallback
+        - id: service2
+          uri: http://localhost:8082
+          predicates:
+            - Path=/service2/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 2
+                key-resolver: "#{@IPAddressKeyResolver}"
+            - RewritePath=/service2(?<remaining>/?.*), $\{remaining}
+  data:
+    redis:
+      host: localhost
+      port: 6379
