@@ -1,4 +1,4 @@
-package com.kulsin.gate_keeper.monitoring;
+package com.kulsin.gate_keeper.metrics;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.kulsin.gate_keeper;
+package com.kulsin.gate_keeper.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

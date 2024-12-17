@@ -1,4 +1,4 @@
-package com.kulsin.gate_keeper;
+package com.kulsin.gate_keeper.logging;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import jakarta.annotation.PostConstruct;
