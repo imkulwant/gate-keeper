@@ -6,9 +6,9 @@ logging:
     reactor.netty: INFO
   file:
     name: ./logs/api-gateway.log
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [%X{traceId:-}] [%X{spanId:-}] [%mdc]- %msg%n"
+#    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [%X{traceId:-}] [%X{spanId:-}] [%mdc] - %msg%n"
 
 management:
   endpoints:
@@ -24,6 +24,10 @@ management:
     livenessState.enabled: true
     readinessState.enabled: true
   info.build.enabled: true
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
 
 resilience4j:
   circuit-breaker:
@@ -66,12 +70,15 @@ spring:
                 redis-rate-limiter.burstCapacity: 2
                 key-resolver: "#{@IPAddressKeyResolver}"
             - RewritePath=/service2(?<remaining>/?.*), $\{remaining}
+    httpclient:
+      wiretap: true
+    httpserver:
+      wiretap: true
+
   data:
     redis:
       host: localhost
       port: 6379
-  sampler:
-    probability: 1.0
 
 spring-doc:
   api-docs:
