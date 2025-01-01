@@ -11,33 +11,34 @@ import reactor.core.publisher.Mono;
 @Component
 public class LoggingFilter implements GlobalFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 
-	private static final String LOG_TEMPLATE = """
-			\n--------------------------------------------------------
-			Request Details
-			--------------------------------------------------------
-			Request Method: {}
-			Request URI: {}
-			Request Headers: {}
-			Request Body: {}
-			--------------------------------------------------------
-			Response Details
-			--------------------------------------------------------
-			Response Status: {}
-			Response Headers: {}
-			Response Body: {}
-			--------------------------------------------------------
-			""";
+    private static final String LOG_TEMPLATE = """
+            \n--------------------------------------------------------
+            Request Details
+            --------------------------------------------------------
+            Request Method: {}
+            Request URI: {}
+            Request Headers: {}
+            Request Body: {}
+            --------------------------------------------------------
+            Response Details
+            --------------------------------------------------------
+            Response Status: {}
+            Response Headers: {}
+            Response Body: {}
+            --------------------------------------------------------
+            """;
 
-	@Override
-	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-		return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-			log.info(LOG_TEMPLATE, exchange.getRequest().getMethod(), exchange.getRequest().getURI(),
-					exchange.getRequest().getHeaders(), exchange.getRequest().getBody(),
-					exchange.getResponse().getStatusCode(), exchange.getResponse().getHeaders(),
-					exchange.getResponse());
-		}));
-	}
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        return chain.filter(exchange)
+                .doOnEach(signal -> {
+                    log.info(LOG_TEMPLATE, exchange.getRequest().getMethod(), exchange.getRequest().getURI(),
+                            exchange.getRequest().getHeaders(), exchange.getRequest().getBody(),
+                            exchange.getResponse().getStatusCode(), exchange.getResponse().getHeaders(),
+                            exchange.getResponse());
+                });
+    }
 
 }
