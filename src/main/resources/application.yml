@@ -63,10 +63,6 @@ spring:
                 redis-rate-limiter.burstCapacity: 2
                 key-resolver: "#{@IPAddressKeyResolver}"
             - RewritePath=/service2(?<remaining>/?.*), $\{remaining}
-    httpclient:
-      wiretap: true
-    httpserver:
-      wiretap: true
 
   data:
     redis:
