@@ -1,24 +1,29 @@
 logging:
   level:
     org.springframework.cloud.gateway: INFO
-    org.springframework.data.redis: INFO
+    org.springframework.http.server.reactive: INFO
+    org.springframework.web.reactive: INFO
+    reactor.netty: INFO
   file:
     name: ./logs/api-gateway.log
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,liveness,readiness
   endpoint:
     health:
+      probes:
+        enabled: true
       show-details: always
+  health:
+    livenessState.enabled: true
+    readinessState.enabled: true
+  info.build.enabled: true
 
 resilience4j:
-  circuitbreaker:
+  circuit-breaker:
     instances:
       defaultCircuitBreaker:
         sliding-window-size: 5 # No of recent calls are tracked to check for failures
@@ -32,6 +37,10 @@ spring:
     config:
       enabled: false
     gateway:
+      httpclient:
+        max-header-size: 128KB
+      metrics:
+        enabled: true
       routes:
         - id: service1
           uri: http://localhost:8081
@@ -54,7 +63,14 @@ spring:
                 redis-rate-limiter.burstCapacity: 2
                 key-resolver: "#{@IPAddressKeyResolver}"
             - RewritePath=/service2(?<remaining>/?.*), $\{remaining}
+
   data:
     redis:
       host: localhost
       port: 6379
+
+spring-doc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
