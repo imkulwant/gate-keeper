@@ -12,18 +12,17 @@ import java.util.UUID;
 @Component
 public class TraceIdFilter implements GlobalFilter {
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        String traceId = UUID.randomUUID().toString();
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+		String traceId = UUID.randomUUID().toString();
 
-        MDC.put("traceId", traceId);
+		MDC.put("traceId", traceId);
 
-        // Proceed with the next filter in the chain
-        return chain.filter(exchange)
-                .doFinally(signalType -> {
-                    // Clear MDC to prevent leakage of context after processing the request
-                    MDC.clear();
-                });
-    }
+		// Proceed with the next filter in the chain
+		return chain.filter(exchange).doFinally(signalType -> {
+			// Clear MDC to prevent leakage of context after processing the request
+			MDC.clear();
+		});
+	}
 
 }
