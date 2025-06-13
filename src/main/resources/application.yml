@@ -74,7 +74,8 @@ spring:
       wiretap: true
     httpserver:
       wiretap: true
-
+  reactor:
+    context-propagation: auto
   data:
     redis:
       host: localhost
