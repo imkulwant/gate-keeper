@@ -17,9 +17,9 @@
 
     <properties>
         <java.version>21</java.version>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
-        <netty-resolver-dns-native-macos.version>4.1.74.Final</netty-resolver-dns-native-macos.version>
-        <spring-javaformat-maven-plugin.version>0.0.43</spring-javaformat-maven-plugin.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <netty-resolver-dns-native-macos.version>4.2.1.Final</netty-resolver-dns-native-macos.version>
+        <spring-javaformat-maven-plugin.version>0.0.46</spring-javaformat-maven-plugin.version>
         <springdoc-openapi-starter-webflux-ui.version>2.3.0</springdoc-openapi-starter-webflux-ui.version>
     </properties>
 
