@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class LoggingFilter implements GlobalFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 
 	private static final String LOG_TEMPLATE = """
 			\n--------------------------------------------------------
@@ -49,5 +49,4 @@ public class LoggingFilter implements GlobalFilter {
 			}));
 		});
 	}
-
 }
