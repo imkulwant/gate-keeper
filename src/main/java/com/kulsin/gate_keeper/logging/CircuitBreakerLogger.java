@@ -4,22 +4,25 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CircuitBreakerLogger {
 
-	@Autowired
-	private CircuitBreakerRegistry circuitBreakerRegistry;
+	private final CircuitBreakerRegistry circuitBreakerRegistry;
 
 	private static final Logger log = LoggerFactory.getLogger(CircuitBreakerLogger.class);
+
+	private static final String LOG_FORMAT = "{} circuitBreakerName: {}, eventType: {}";
+
+	public CircuitBreakerLogger(CircuitBreakerRegistry circuitBreakerRegistry) {
+		this.circuitBreakerRegistry = circuitBreakerRegistry;
+	}
 
 	@PostConstruct
 	public void setupCircuitBreakerLogging() {
 		log.info("Setting up circuit breaker logging");
-		circuitBreakerRegistry.getAllCircuitBreakers().forEach(circuitBreaker -> {
-			circuitBreaker.getEventPublisher()
+		circuitBreakerRegistry.getAllCircuitBreakers().forEach(circuitBreaker -> circuitBreaker.getEventPublisher()
 				.onStateTransition(event -> logEvent("Circuit Breaker State Transition.", event.getCircuitBreakerName(),
 						event.getEventType().toString(), "INFO"))
 				.onError(event -> logEvent("Circuit Breaker Error.", event.getCircuitBreakerName(),
@@ -31,19 +34,16 @@ public class CircuitBreakerLogger {
 				.onReset(event -> logEvent("Circuit Breaker Reset.", event.getCircuitBreakerName(),
 						event.getEventType().toString(), "INFO"))
 				.onCallNotPermitted(event -> logEvent("Circuit Breaker Call Not Permitted.",
-						event.getCircuitBreakerName(), event.getEventType().toString(), "WARN"));
-		});
+						event.getCircuitBreakerName(), event.getEventType().toString(), "WARN")));
 	}
 
 	private static void logEvent(String message, String circuitBreakerName, String eventType, String logLevel) {
 		if ("ERROR".equals(logLevel)) {
-			log.error("{} circuitBreakerName: {}, eventType: {}", message, circuitBreakerName, eventType);
-		}
-		else if ("WARN".equals(logLevel)) {
-			log.warn("{} circuitBreakerName: {}, eventType: {}", message, circuitBreakerName, eventType);
-		}
-		else {
-			log.info("{} circuitBreakerName: {}, eventType: {}", message, circuitBreakerName, eventType);
+			log.error(LOG_FORMAT, message, circuitBreakerName, eventType);
+		} else if ("WARN".equals(logLevel)) {
+			log.warn(LOG_FORMAT, message, circuitBreakerName, eventType);
+		} else {
+			log.info(LOG_FORMAT, message, circuitBreakerName, eventType);
 		}
 	}
 
