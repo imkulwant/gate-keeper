@@ -22,7 +22,8 @@ public class CircuitBreakerLogger {
 	@PostConstruct
 	public void setupCircuitBreakerLogging() {
 		log.info("Setting up circuit breaker logging");
-		circuitBreakerRegistry.getAllCircuitBreakers().forEach(circuitBreaker -> circuitBreaker.getEventPublisher()
+		circuitBreakerRegistry.getAllCircuitBreakers()
+			.forEach(circuitBreaker -> circuitBreaker.getEventPublisher()
 				.onStateTransition(event -> logEvent("Circuit Breaker State Transition.", event.getCircuitBreakerName(),
 						event.getEventType().toString(), "INFO"))
 				.onError(event -> logEvent("Circuit Breaker Error.", event.getCircuitBreakerName(),
@@ -40,10 +41,12 @@ public class CircuitBreakerLogger {
 	private static void logEvent(String message, String circuitBreakerName, String eventType, String logLevel) {
 		if ("ERROR".equals(logLevel)) {
 			log.error(LOG_FORMAT, message, circuitBreakerName, eventType);
-		} else if ("WARN".equals(logLevel)) {
+		}
+		else if ("WARN".equals(logLevel)) {
 			log.warn(LOG_FORMAT, message, circuitBreakerName, eventType);
-		} else {
-			log.info(LOG_FORMAT, message, circuitBreakerName, eventType);
+		}
+		else {
+			log.debug(LOG_FORMAT, message, circuitBreakerName, eventType);
 		}
 	}
 
