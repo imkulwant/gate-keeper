@@ -1,4 +1,4 @@
-package com.kulsin.gate_keeper.controllers;
+package com.kulsin.apigateway.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

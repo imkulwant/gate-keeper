@@ -1,4 +1,4 @@
-package com.kulsin.gate_keeper;
+package com.kulsin.apigateway.config;
 
 import org.springframework.boot.actuate.health.Health;
 

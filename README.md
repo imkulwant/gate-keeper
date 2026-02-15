@@ -1,34 +1,62 @@
-# gate-keeper
+# API Gateway
 
-- An API Gateway Service that acts as a central entry point for all client requests to the backend microservices.
-- **Routing:** Directs incoming requests to the appropriate backend services based on predefined routes.
-- **Rate Limiting:** Limits the number of requests a client can make in a given time period to prevent abuse and ensure fair usage.
-- **Circuit Breaker Pattern:** Utilizes the circuit breaker pattern to prevent cascading failures in the system by temporarily blocking requests to failing services.
-- **Monitoring and Metrics:** Exposes metrics through actuator endpoints for easy access and visualization.
-- **API Documentation:** Accessible via Swagger UI for easy exploration of available endpoints.
+- api-gateway is a Spring Cloud Gateway service that fronts backend APIs and provides routing, rate limiting, circuit breaking, and observability.
 
-Ping Service1:
+## What It Does
+
+- Routes traffic to backend services:
+  - `/service1/**` -> `apigateway.routes.service1-uri` (default `http://localhost:8081`)
+  - `/service2/**` -> `apigateway.routes.service2-uri` (default `http://localhost:8082`)
+- Applies a circuit breaker with fallback (`/fallback`).
+- Applies Redis-backed request rate limiting on services using client IP as the key.
+- Exposes Actuator health/info/metrics endpoints.
+- Publishes OpenAPI/Swagger UI.
+
+## Tech Stack
+
+- Java 21
+- Spring Boot 3.5.x
+- Spring Cloud Gateway (WebFlux)
+- Resilience4j
+- Redis (reactive)
+- Micrometer + OpenTelemetry Zipkin exporter
+- Maven
+
+## Local Stub Services (Optional)
+
+Two Flask scripts are included for local route testing:
+
+- `src/main/resources/scripts/test-server-1.py` (port 8081)
+- `src/main/resources/scripts/test-server-2.py` (port 8082)
+
+## Smoke Tests
+
 ```bash
+# Service 1 route
 curl --location 'http://localhost:8080/service1/api/ping'
-```
 
-Ping Service2:
-```bash
+# Service 2 route (rate limited)
 curl --location 'http://localhost:8080/service2/api/ping'
+
+# Health
+curl --location 'http://localhost:8080/actuator/health' | jq
 ```
 
 Monitor Redis:
+
 ```shell
 redis-cli monitor
 ```
 
-Check Redis Keys: 
+Check Redis Keys:
+
 ```shell
 redis-cli
 > KEYS *
 ```
 
 Application Status & Metrics:
+
 ```bash
 curl --location 'http://localhost:8080/actuator/health' | jq
 ```
@@ -56,11 +84,13 @@ curl --location 'localhost:8080/api-docs'
 ```
 
 Install Redis
+
 ```bash
 brew install redis
 ```
 
 Start Redis
+
 ```bash
 brew services start redis
 ```

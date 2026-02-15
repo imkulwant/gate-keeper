@@ -1,4 +1,4 @@
-package com.kulsin.gate_keeper.ratelimit;
+package com.kulsin.apigateway.ratelimit;
 
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.stereotype.Component;

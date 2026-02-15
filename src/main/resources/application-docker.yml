@@ -1,0 +1,25 @@
+logging:
+  level:
+    io.micrometer.tracing: INFO
+    io.opentelemetry.exporter.zipkin: INFO
+    org.springframework.cloud.gateway: INFO
+    org.springframework.http.server.reactive: INFO
+    org.springframework.web.reactive: INFO
+    reactor.netty: INFO
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  health:
+    livenessState.enabled: true
+    readinessState.enabled: true
+  info.build.enabled: true
+
+spring:
+  data:
+    redis:
+      host: redis
+      port: 6379

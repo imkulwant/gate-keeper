@@ -10,9 +10,9 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kulsin</groupId>
-    <artifactId>gate-keeper</artifactId>
+    <artifactId>api-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gate-keeper</name>
+    <name>api-gateway</name>
     <description>API Gateway</description>
 
     <properties>

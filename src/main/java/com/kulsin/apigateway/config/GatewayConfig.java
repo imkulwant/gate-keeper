@@ -1,4 +1,4 @@
-package com.kulsin.gate_keeper.config;
+package com.kulsin.apigateway.config;
 
 import org.springframework.context.annotation.Configuration;
 

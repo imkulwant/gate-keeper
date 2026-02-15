@@ -1,4 +1,4 @@
-package com.kulsin.gate_keeper;
+package com.kulsin.apigateway;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
